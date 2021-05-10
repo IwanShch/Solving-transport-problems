@@ -13,7 +13,7 @@
 
 - Download the ".cpp" file;
 - Open a file using "Visual Studio" ("Visual Studio 2017" and later versions);
-- Create the files associated with the program on the "C" drive. (What files belong to the programs, it is written in the "README".);
+- Create the files associated with the program on the "C" drive. (What files belong to the programs are written in the section "About the repository".);
 - Compile the program;
 
 Completed!
