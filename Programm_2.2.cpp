@@ -12,15 +12,47 @@ void out_matrix(double**, int, int);
 int main()
 {
 
-	int order_i, order_j, index_i, index_j, index_f, k, order_i_d, order_j_d;
+	int order_i, order_j, index_i, index_j, index_f, k, order_i_d, order_j_d, sum;
 	double min, min_ab, date, target_function, target_function_i;
 	bool fl1, fl2;
 	ofstream f_m;
 
 	srand(time(0));
 
-	order_i = rand();
-	order_j = rand();
+	order_i = rand() % 10;
+
+	int *vect_a = new int[order_i];
+
+	for (int i = 0; i < order_i; i++)
+		vect_a[i] = rand() % 10;
+
+	sum = 0;
+	for (int i = 0; i < order_i; i++)
+		sum += vect_a[i];
+
+	order_j = rand() % sum + 1;
+
+	int *vect_b = new int[order_j];
+
+	if (order_j == sum)
+		for (int i = 0; i < order_j; i++)
+			vect_b[i] = 1;
+	if (order_j == 1)
+		vect_b[0] = sum;
+	else {
+		int remains;
+
+		remains = sum - order_j;
+		for (int i = 0; i < order_j; i++)
+			vect_b[i] = 1;
+		while (remains) {
+			vect_b[rand() % order_j] += 1;
+			remains--;
+		}
+	}
+
+	order_i_d = order_i;
+	order_j_d = order_j;
 
 	cout << "order_i: " << order_i << "\n";
 	cout << "order_j: " << order_j << "\n\n";
@@ -41,11 +73,9 @@ int main()
 		for (int j = 0; j < order_j; j++)
 			find_matrix[i][j] = 0;
 
-	int *vect_a = new int[order_i];
-	int *vect_b = new int[order_j];
-	bool *vect_delete = new bool[order_j];
+	bool *vect_delete_b = new bool[order_j];
 	bool *vect_delete_a = new bool[order_i];
-	
+
 	for (int i = 0; i < order_i; i++)
 		for (int j = 0; j < order_j; j++)
 			matrix[i][j] = rand() % 10;
@@ -55,14 +85,8 @@ int main()
 			matrix_c[i][j] = matrix[i][j];
 
 
-	for (int i = 0; i < order_i; i++)
-		vect_a[i] = rand() % 10;
-	for (int j = 0; j < order_j; j++)
-		vect_b[j] = rand() % 10;
-
-
 	for (int i = 0; i < order_j; i++)
-		vect_delete[i] = false;
+		vect_delete_b[i] = false;
 
 	for (int i = 0; i < order_i; i++)
 		vect_delete_a[i] = false;
@@ -86,32 +110,33 @@ int main()
 		}
 
 
-	if (vect_a[0] < vect_b[0]) {
-		min = vect_a[0] * matrix[0][0];
-		index_i = 0;
-		index_j = 0;
-		date = vect_a[0];
-	}
-	else {
-		min = vect_b[0] * matrix[0][0];
-		index_i = 0;
-		index_j = 0;
-		date = vect_b[0];
-	}
-
 	index_i = 0;
 	index_j = 0;
 	k = 0;
 	target_function = target_function_i = 0;
 	do {
 		cout << "k: " << k << "\n\n";
-
-		min = INT_MAX;
+		for (int i = 0; i < order_i; i++)
+			if (!vect_delete_a[i]) {
+				for (int j = 0; j < order_j; j++)
+					if (!vect_delete_b[j]) {
+						if (vect_a[i] < vect_b[j])
+							min_ab = vect_a[i];
+						else
+							min_ab = vect_b[j];
+						min = min_ab * matrix[i][j];
+						index_i = i;
+						index_j = j;
+						date = min_ab;
+						break;
+					}
+				break;
+			}
 
 		for (int i = 0; i < order_i; i++)
 			if (!vect_delete_a[i]) {
 				for (int j = 0; j < order_j; j++) {
-					if (!vect_delete[j]) {
+					if (!vect_delete_b[j]) {
 						if (vect_a[i] < vect_b[j])
 							min_ab = vect_a[i];
 						else
@@ -126,22 +151,22 @@ int main()
 					}
 				}
 			}
-	
+
 		find_matrix[index_i][index_j] = date;
 
 
-		
+
 		target_function += date * matrix_c[index_i][index_j] + matrix_d[index_i][index_j];
 		target_function_i += date * matrix[index_i][index_j];
 
 		vect_a[index_i] -= date;
 		vect_b[index_j] -= date;
 		if (vect_b[index_j] == 0)
-			vect_delete[index_j] = true;
+			vect_delete_b[index_j] = true;
 		else
 			vect_delete_a[index_i] = true;
 
-		fl1 = check(vect_delete, order_j);
+		fl1 = check(vect_delete_b, order_j);
 		fl2 = check(vect_delete_a, order_i);
 
 		k++;
@@ -150,7 +175,7 @@ int main()
 	for (int i = 0; i < order_i; i++)
 		if (!vect_delete_a[i]) {
 			for (int j = 0; j < order_j; j++)
-				if (!vect_delete[j]) {
+				if (!vect_delete_b[j]) {
 					if (vect_a[i] < vect_b[j]) {
 						find_matrix[i][j] = vect_a[i];
 						target_function += vect_a[i] * matrix_c[i][j] + matrix_d[i][j];
@@ -159,9 +184,9 @@ int main()
 					else {
 						find_matrix[i][j] = vect_b[j];
 						target_function += vect_b[j] * matrix_c[i][j] + matrix_d[i][j];
-				
+
 						target_function_i += vect_b[j] * matrix[i][j];
-				
+
 					}
 				}
 		}
