@@ -12,10 +12,10 @@ void out_matrix(double**, int, int);
 int main()
 {
 
-	int order_i, order_j, index_i, index_j, index_f, k, order_i_d, order_j_d, sum;
+	long int order_i, order_j, index_i, index_j, index_f, k, order_i_d, order_j_d, sum;
 	double min, min_ab, date, target_function, target_function_i;
 	bool fl1, fl2;
-	ofstream f_m;
+	fstream f_m;
 
 	srand(time(0));
 
@@ -24,7 +24,7 @@ int main()
 	int *vect_a = new int[order_i];
 
 	for (int i = 0; i < order_i; i++)
-		vect_a[i] = rand() % 10;
+		vect_a[i] = rand() % 10 + 1;
 
 	sum = 0;
 	for (int i = 0; i < order_i; i++)
@@ -78,7 +78,7 @@ int main()
 
 	for (int i = 0; i < order_i; i++)
 		for (int j = 0; j < order_j; j++)
-			matrix[i][j] = rand() % 10;
+			matrix[i][j] = rand() % 10 + 1;
 
 	for (int i = 0; i < order_i; i++)
 		for (int j = 0; j < order_j; j++)
@@ -98,7 +98,7 @@ int main()
 
 	for (int i = 0; i < order_i_d; i++)
 		for (int j = 0; j < order_j_d; j++)
-			matrix_d[i][j] = rand();
+			matrix_d[i][j] = rand() % 10 + 1;
 
 	for (int i = 0; i < order_i; i++)
 		for (int j = 0; j < order_j; j++) {
@@ -108,6 +108,37 @@ int main()
 				min_ab = vect_b[j];
 			matrix[i][j] = matrix[i][j] + ((1.0*matrix_d[i][j]) / min_ab);
 		}
+
+  f_m.open ("res.txt");
+
+  f_m << "order_i: " << order_i << "\n";
+  f_m << "order_j: " << order_j << "\n\n";
+
+  f_m << "Исходная матрица \"c\":\n";
+  for (int i = 0; i < order_i; i++){
+   for (int j = 0; j < order_j; j++)
+    f_m << setw(3) << matrix_c[i][j] << " ";
+   f_m << "\n";
+  }
+  f_m << "\n\n";
+
+  cout << "Матрица \"*c\":\n";
+  for (int i = 0; i < order_i; i++){
+   for (int j = 0; j < order_j; j++)
+    f_m << setw(3) << matrix[i][j] << " ";
+   f_m << "\n";
+  }
+  f_m << "\n\n";
+
+  f_m << "Исходный \"vect_a\":\n";
+  for (int i = 0; i < order_i; i++)
+   f_m << setw(3) << vect_a[i] << " ";
+  f_m << "\n\n"; 
+  
+  f_m << "Исходный \"vect_b\":\n";
+  for (int i = 0; i < order_j; i++)
+   f_m << setw(3) << vect_b[i] << " ";
+  f_m << "\n\n";
 
 
 	index_i = 0;
@@ -191,23 +222,24 @@ int main()
 				}
 		}
 
-	f_m.open("res.txt");
-
+  
+  f_m << "______________________________________\n\n";
+  f_m << "Найденная матрица:\n";
 	for (int i = 0; i < order_i; i++) {
 		for (int j = 0; j < order_j; j++)
-			f_m << find_matrix[i][j] << " ";
+			f_m << setw(2) << find_matrix[i][j] << " ";
 		f_m << "\n";
 	}
 	f_m << "\n\n";
 	f_m << "vect_a:\n";
 
 	for (int i = 0; i < order_i; i++)
-		f_m << vect_a[i] << " ";
+		f_m << setw(2) << vect_a[i] << " ";
 	f_m << "\n\n";
 
 	f_m << "vect_b:\n";
 	for (int i = 0; i < order_j; i++)
-		f_m << vect_b[i] << " ";
+		f_m << setw(2) << vect_b[i] << " ";
 	f_m << "\n\n";
 
 	f_m << "Значение целевой функции: " << target_function << "\n\n";
