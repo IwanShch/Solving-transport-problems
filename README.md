@@ -6,3 +6,14 @@
 Файлы "matrix1.txt", "matrix2.txt", "matrix3.txt" относятся к программе "Programm_1";
 
 Файлы "matrix4.txt", "matrix_d.txt" относятся к программе "Programm_2.1"; 
+
+# Starting the program
+
+! Instructions are provided for the "Windows"
+
+- Download the ".cpp" file;
+- Open a file using "Visual Studio" ("Visual Studio 2017" and later versions);
+- Create the files associated with the program on the "C" drive. (What files belong to the programs, it is written in the "README".);
+- Compile the program;
+
+Completed!
