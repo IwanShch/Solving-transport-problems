@@ -50,7 +50,7 @@ int main()
 
 	int *vect_a = new int[order_i];
 	int *vect_b = new int[order_j];
-	bool *vect_delete = new bool[order_j];
+	bool *vect_delete_b = new bool[order_j];
 	bool *vect_delete_a = new bool[order_i];
 
 	for (int i = 0; i < order_i; i++)
@@ -71,7 +71,7 @@ int main()
 	f_m.close();
 
 	for (int i = 0; i < order_j; i++)
-		vect_delete[i] = false;
+		vect_delete_b[i] = false;
 
 	for (int i = 0; i < order_i; i++)
 		vect_delete_a[i] = false;
@@ -119,32 +119,34 @@ int main()
 		cout << vect_b[j] << " ";
 	cout << "\n\n";
 
-	if (vect_a[0] < vect_b[0]) {
-		min = vect_a[0] * matrix[0][0];
-		index_i = 0;
-		index_j = 0;
-		date = vect_a[0];
-	}
-	else {
-		min = vect_b[0] * matrix[0][0];
-		index_i = 0;
-		index_j = 0;
-		date = vect_b[0];
-	}
-
 	index_i = 0;
 	index_j = 0;
 	k = 0;
 	target_function = target_function_i = 0;
 	do {
-		cout << "k: " << k << "\n\n";
+		//cout << "k: " << k << "\n\n";
 
-		min = INT_MAX;
+		for (int i = 0; i < order_i; i++)
+			if (!vect_delete_a[i]) {
+				for (int j = 0; j < order_j; j++)
+					if (!vect_delete_b[j]) {
+						if (vect_a[i] < vect_b[j])
+							min_ab = vect_a[i];
+						else
+							min_ab = vect_b[j];
+						min = min_ab * matrix[i][j];
+						index_i = i;
+						index_j = j;
+						date = min_ab;
+						break;
+					}
+				break;
+			}
 
 		for (int i = 0; i < order_i; i++)
 			if (!vect_delete_a[i]) {
 				for (int j = 0; j < order_j; j++) {
-					if (!vect_delete[j]) {
+					if (!vect_delete_b[j]) {
 						if (vect_a[i] < vect_b[j])
 							min_ab = vect_a[i];
 						else
@@ -158,7 +160,7 @@ int main()
 						}
 
 
-						cout << "i: " << i << " j: " << j << "\n\n";
+						/*cout << "i: " << i << " j: " << j << "\n\n";
 						cout << "min: " << min << "\n\n";
 						cout << "matrix:\n";
 						out_matrix(matrix, order_i, order_j);
@@ -170,55 +172,56 @@ int main()
 						cout << "vect_b:\n";
 						for (int i = 0; i < order_j; i++)
 							cout << vect_b[i] << " ";
-						cout << "\n_______________________________\n\n"; 
+						cout << "\n_______________________________\n\n"; */
 					}
-					cout << "date: " << date << "\n\n";
-					//cin.get();
+					/*cout << "date: " << date << "\n\n";
+					cin.get();*/
 				}
 			}
-		cout << "date: " << date << " " << "matrix[" << index_i << "][" << index_j << "]: " << matrix[index_i][index_j] << "\n\n";
+		//cout << "date: " << date << " " << "matrix[" << index_i << "][" << index_j << "]: " << matrix[index_i][index_j] << "\n\n";
 		find_matrix[index_i][index_j] = date;
-		
-		cout << "matrix_c[index_i][index_j]: " << matrix_c[index_i][index_j] << " matrix_d[index_i][index_j]: " << matrix_d[index_i][index_j] << "\n\n";
-		cout << "matrix[index_i][index_j]: " << matrix[index_i][index_j] << " date: " << date << "\n\n";
+
+		//cout << "matrix_c[index_i][index_j]: " << matrix_c[index_i][index_j] << " matrix_d[index_i][index_j]: " << matrix_d[index_i][index_j] << "\n\n";
+		//cout << "matrix[index_i][index_j]: " << matrix[index_i][index_j] << " date: " << date << "\n\n";
 		target_function += date * matrix_c[index_i][index_j] + matrix_d[index_i][index_j];
 		target_function_i += date * matrix[index_i][index_j];
-		cout << "target_function: " << target_function << "\n";
-		cout << "target_function_i: " << target_function_i << "\n\n";
+		//cout << "target_function: " << target_function << "\n";
+		//cout << "target_function_i: " << target_function_i << "\n\n";
 		vect_a[index_i] -= date;
 		vect_b[index_j] -= date;
 		if (vect_b[index_j] == 0)
-			vect_delete[index_j] = true;
+			vect_delete_b[index_j] = true;
 		else
 			vect_delete_a[index_i] = true;
 
-		fl1 = check(vect_delete, order_j);
+		fl1 = check(vect_delete_b, order_j);
 		fl2 = check(vect_delete_a, order_i);
 
 		k++;
 	} while (fl1 && fl2);
-	
+
 	for (int i = 0; i < order_i; i++)
 		if (!vect_delete_a[i]) {
 			for (int j = 0; j < order_j; j++)
-				if (!vect_delete[j]) {
+				if (!vect_delete_b[j]) {
 					if (vect_a[i] < vect_b[j]) {
 						find_matrix[i][j] = vect_a[i];
 						target_function += vect_a[i] * matrix_c[i][j] + matrix_d[i][j];
-						cout << "vect_a[i]: " << vect_a[i] << " matrix_c[i][j]: " << matrix_c[i][j] << " matrix_d[i][j]: " << matrix_d[i][j] << "\n";
+						//cout << "vect_a[i]: " << vect_a[i] << " matrix_c[i][j]: " << matrix_c[i][j] << " matrix_d[i][j]: " << matrix_d[i][j] << "\n";
 						target_function_i += vect_a[i] * matrix[i][j];
-						cout << "matrix[i][j]: " << matrix[i][j] << "\n\n";
+						//cout << "matrix[i][j]: " << matrix[i][j] << "\n\n";
 					}
 					else {
 						find_matrix[i][j] = vect_b[j];
 						target_function += vect_b[j] * matrix_c[i][j] + matrix_d[i][j];
-						cout << "vect_b[i]: " << vect_b[j] << " matrix_c[i][j]: " << matrix_c[i][j] << " matrix_d[i][j]: " << matrix_d[i][j] << "\n";
+						//cout << "vect_b[i]: " << vect_b[j] << " matrix_c[i][j]: " << matrix_c[i][j] << " matrix_d[i][j]: " << matrix_d[i][j] << "\n";
 						target_function_i += vect_b[j] * matrix[i][j];
-						cout << "matrix[i][j]: " << matrix[i][j] << "\n\n";
-					} 
+						//cout << "matrix[i][j]: " << matrix[i][j] << "\n\n";
+					}
 				}
 		}
-
+	cout << "\n\n_______________________________________________\n\n";
+	cout << "После вычислений: \n\n";
 	cout << "Искомая матрица:\n";
 	out_matrix(find_matrix, order_i, order_j);
 	cout << "\n\n";
