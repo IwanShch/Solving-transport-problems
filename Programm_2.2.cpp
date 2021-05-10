@@ -19,7 +19,7 @@ int main()
 
 	srand(time(0));
 
-	order_i = rand() % 10;
+	order_i = rand() % 10 + 1;
 
 	int *vect_a = new int[order_i];
 
@@ -37,19 +37,20 @@ int main()
 	if (order_j == sum)
 		for (int i = 0; i < order_j; i++)
 			vect_b[i] = 1;
-	if (order_j == 1)
-		vect_b[0] = sum;
-	else {
-		int remains;
+	else
+		if (order_j == 1)
+			vect_b[0] = sum;
+		else {
+			int remains;
 
-		remains = sum - order_j;
-		for (int i = 0; i < order_j; i++)
-			vect_b[i] = 1;
-		while (remains) {
-			vect_b[rand() % order_j] += 1;
-			remains--;
+			remains = sum - order_j;
+			for (int i = 0; i < order_j; i++)
+				vect_b[i] = 1;
+			while (remains) {
+				vect_b[rand() % order_j] += 1;
+				remains--;
+			}
 		}
-	}
 
 	order_i_d = order_i;
 	order_j_d = order_j;
@@ -109,44 +110,44 @@ int main()
 			matrix[i][j] = matrix[i][j] + ((1.0*matrix_d[i][j]) / min_ab);
 		}
 
-  f_m.open ("res.txt");
+	f_m.open("res.txt");
 
-  f_m << "order_i: " << order_i << "\n";
-  f_m << "order_j: " << order_j << "\n\n";
+	f_m << "order_i: " << order_i << "\n";
+	f_m << "order_j: " << order_j << "\n\n";
 
-  f_m << "Исходная матрица \"c\":\n";
-  for (int i = 0; i < order_i; i++){
-   for (int j = 0; j < order_j; j++)
-    f_m << setw(3) << matrix_c[i][j] << " ";
-   f_m << "\n";
-  }
-  f_m << "\n\n";
-  
-  f_m << "Матрица \"matrix_d\":\n";
-  for (int i = 0; i < order_i; i++){
-   for (int j = 0; j < order_j; j++)
-    f_m << setw(3) << matrix_d[i][j] << " ";
-   f_m << "\n";
-  }
-  f_m << "\n\n";
+	f_m << "Исходная матрица \"c\":\n";
+	for (int i = 0; i < order_i; i++) {
+		for (int j = 0; j < order_j; j++)
+			f_m << setw(3) << matrix_c[i][j] << " ";
+		f_m << "\n";
+	}
+	f_m << "\n\n";
 
-  f_m << "Матрица \"*c\":\n";
-  for (int i = 0; i < order_i; i++){
-   for (int j = 0; j < order_j; j++)
-    f_m << setw(3) << matrix[i][j] << " ";
-   f_m << "\n";
-  }
-  f_m << "\n\n";
+	f_m << "Матрица \"matrix_d\":\n";
+	for (int i = 0; i < order_i; i++) {
+		for (int j = 0; j < order_j; j++)
+			f_m << setw(3) << matrix_d[i][j] << " ";
+		f_m << "\n";
+	}
+	f_m << "\n\n";
 
-  f_m << "Исходный \"vect_a\":\n";
-  for (int i = 0; i < order_i; i++)
-   f_m << setw(3) << vect_a[i] << " ";
-  f_m << "\n\n"; 
-  
-  f_m << "Исходный \"vect_b\":\n";
-  for (int i = 0; i < order_j; i++)
-   f_m << setw(3) << vect_b[i] << " ";
-  f_m << "\n\n";
+	f_m << "Матрица \"*c\":\n";
+	for (int i = 0; i < order_i; i++) {
+		for (int j = 0; j < order_j; j++)
+			f_m << setw(3) << matrix[i][j] << " ";
+		f_m << "\n";
+	}
+	f_m << "\n\n";
+
+	f_m << "Исходный \"vect_a\":\n";
+	for (int i = 0; i < order_i; i++)
+		f_m << setw(3) << vect_a[i] << " ";
+	f_m << "\n\n";
+
+	f_m << "Исходный \"vect_b\":\n";
+	for (int i = 0; i < order_j; i++)
+		f_m << setw(3) << vect_b[i] << " ";
+	f_m << "\n\n";
 
 
 	index_i = 0;
@@ -230,9 +231,9 @@ int main()
 				}
 		}
 
-  
-  f_m << "______________________________________\n\n";
-  f_m << "Найденная матрица:\n";
+
+	f_m << "______________________________________\n\n";
+	f_m << "Найденная матрица:\n";
 	for (int i = 0; i < order_i; i++) {
 		for (int j = 0; j < order_j; j++)
 			f_m << setw(2) << find_matrix[i][j] << " ";
