@@ -121,8 +121,16 @@ int main()
    f_m << "\n";
   }
   f_m << "\n\n";
+  
+  f_m << "Матрица \"matrix_d\":\n";
+  for (int i = 0; i < order_i; i++){
+   for (int j = 0; j < order_j; j++)
+    f_m << setw(3) << matrix_d[i][j] << " ";
+   f_m << "\n";
+  }
+  f_m << "\n\n";
 
-  cout << "Матрица \"*c\":\n";
+  f_m << "Матрица \"*c\":\n";
   for (int i = 0; i < order_i; i++){
    for (int j = 0; j < order_j; j++)
     f_m << setw(3) << matrix[i][j] << " ";
