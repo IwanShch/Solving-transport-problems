@@ -274,6 +274,15 @@ int main()
 
 	cout << "Значение целефой функции в модифицированной транспортной задаче: " << target_function_i << "\n\n"; */
 
+	delete[]vect_a;
+        delete[]vect_b;
+        delete[]matrix;
+        delete[]matrix_c;
+        delete[]find_matrix;
+        delete[]vect_delete_b;
+        delete[]vect_delete_a;
+        delete[]matrix_d;
+	
 	system("pause");
 	return 0;
 }
